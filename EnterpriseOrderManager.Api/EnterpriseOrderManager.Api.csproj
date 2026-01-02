@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\EnterpriseOrderManager.Application\EnterpriseOrderManager.Application.csproj" />
     <ProjectReference Include="..\EnterpriseOrderManager.Infrastructure\EnterpriseOrderManager.Infrastructure.csproj" />
   </ItemGroup>

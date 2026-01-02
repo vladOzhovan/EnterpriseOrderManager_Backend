@@ -1,8 +1,8 @@
 ﻿using EnterpriseOrderManager.Domain.Enums;
 
-namespace EnterpriseOrderManager.Domain.Entities
+namespace EnterpriseOrderManager.Infrastructure.Data.Entities
 {
-    public class OrderDomain
+    public class OrderEntity
     {
         public Guid Id { get; set; } = Guid.Empty;
         public Guid CustomerId { get; set; } = Guid.Empty;

@@ -1,5 +1,9 @@
-﻿using EnterpriseOrderManager.Infrastructure.Data;
+﻿using EnterpriseOrderManager.Application.Contracts;
+using EnterpriseOrderManager.Application.Services;
+using EnterpriseOrderManager.Infrastructure.Data;
 using EnterpriseOrderManager.Infrastructure.Identity;
+using EnterpriseOrderManager.Infrastructure.Repositories;
+using EnterpriseOrderManager.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +24,10 @@ namespace EnterpriseOrderManager.Api.DI
 
             services.AddMemoryCache();
             services.AddDbContext<AppDbContext>(options => options.UseSqlite(connectionString));
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ICustomerNumberGenerator, SqliteCustomerNumberGenerator>();
 
             // configure Identity
             services.AddIdentityCore<AppUser>(options =>
@@ -56,7 +64,6 @@ namespace EnterpriseOrderManager.Api.DI
                 });
 
             services.AddAuthorization();
-
             services.AddControllers();
             services.AddEndpointsApiExplorer();
 
@@ -89,8 +96,6 @@ namespace EnterpriseOrderManager.Api.DI
                     }
                 });
             });
-
-
 
             return services;
         }

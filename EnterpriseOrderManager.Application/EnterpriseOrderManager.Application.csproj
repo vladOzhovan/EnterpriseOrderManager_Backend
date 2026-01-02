@@ -11,9 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Dtos\" />
-    <Folder Include="Services\" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Mappers\" />
   </ItemGroup>
 
 </Project>

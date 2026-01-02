@@ -1,7 +1,8 @@
 ﻿namespace EnterpriseOrderManager.Domain.Enums
 {
-    public enum OrderStatus
+    public enum CustomerStatus
     {
+        NoOrders = 0,
         Pending = 1,
         InProgress = 2,
         Completed = 3,

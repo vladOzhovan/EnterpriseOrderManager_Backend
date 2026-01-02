@@ -1,6 +1,6 @@
-﻿namespace EnterpriseOrderManager.Domain.Entities
+﻿namespace EnterpriseOrderManager.Infrastructure.Data.Entities
 {
-    public class AddressDomain
+    public class AddressEntity
     {
         public int? ZipCode { get; set; }
         public string? Country { get; set; }

@@ -6,15 +6,13 @@ namespace EnterpriseOrderManager.Api.Mappers
 {
     public static class CustomerQueryMapper
     {
-        public static CustomerQuery ToQuery (this CustomerQueryDto dto)
+        public static CustomerQuery ToQuery (this CustomerQueryDto dto, CustomerSortField sortBy)
         {
-            var query = new CustomerQuery
-            {
-                IsDescending = dto.IsDescending,
-                Search = dto.Search
-            };
-
-            query.SortBy = CustomerSortFieldParser.Parse(dto.SortBy);
+            var query = new CustomerQuery(
+                Search: dto.Search, 
+                IsDescending: dto.IsDescending, 
+                SortBy: sortBy
+            );
             return query;
         }
     }

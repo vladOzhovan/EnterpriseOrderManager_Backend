@@ -1,9 +1,7 @@
 ﻿using EnterpriseOrderManager.Application.Contracts;
-using EnterpriseOrderManager.Application.Dtos;
 using EnterpriseOrderManager.Application.Queries;
 using EnterpriseOrderManager.Domain.Entities;
 using EnterpriseOrderManager.Infrastructure.Data;
-using EnterpriseOrderManager.Infrastructure.Data.Entities;
 using EnterpriseOrderManager.Infrastructure.Extensions;
 using EnterpriseOrderManager.Infrastructure.Mappers;
 using Microsoft.EntityFrameworkCore;
@@ -39,11 +37,6 @@ namespace EnterpriseOrderManager.Infrastructure.Repositories
             await _context.AddAsync(newCustomerEntity);
             await _context.SaveChangesAsync();
             return domain;
-        }
-
-        private int AssignNumber()
-        {
-            return 11111; // this method will be refined
         }
     }
 }

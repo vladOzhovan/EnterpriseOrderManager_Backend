@@ -28,7 +28,12 @@ namespace EnterpriseOrderManager.Api.Controllers
         [HttpGet("get-all-customers")]
         public async Task<IActionResult> GetAll([FromQuery] CustomerQueryDto dto)
         {
-            CustomerQuery query = dto.ToQuery();
+            var sortResult = CustomerSortFieldParser.Parse(dto.SortBy);
+
+            if (!sortResult.Succeeded)
+                return BadRequest(sortResult.Error);
+            
+            CustomerQuery query = dto.ToQuery(sortResult.Value);
             var customersDomain = await _service.GetAllAsync(query);
             var responseDto = customersDomain.Select(c => c.ToResponseDto());
             return Ok(responseDto);

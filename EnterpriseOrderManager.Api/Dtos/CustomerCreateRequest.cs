@@ -1,6 +1,7 @@
 ﻿namespace EnterpriseOrderManager.Api.Dtos
 {
-    public record CustomerCreateRequest(
+    public record CustomerCreateRequest
+    (
         string FirstName,
         string SecondName,
         string? PhoneNumber,

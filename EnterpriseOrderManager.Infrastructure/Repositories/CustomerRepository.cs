@@ -16,7 +16,7 @@ namespace EnterpriseOrderManager.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IReadOnlyList<CustomerDomain>> GetAllAsync(CustomerQuery query)
+        public async Task<IReadOnlyList<CustomerDomain>> GetAllAsync(CustomerQuery query, CancellationToken ct = default)
         {
             var queryBase = _context.Customers
                 .AsNoTracking()
@@ -26,16 +26,29 @@ namespace EnterpriseOrderManager.Infrastructure.Repositories
 
             queryBase = queryBase.ApplySearch(query.Search);
             queryBase = queryBase.ApplySorting(query.SortBy, query.IsDescending);
-            var entities = await queryBase.ToListAsync();
+
+            var entities = await queryBase.ToListAsync(ct);
             var customersDomain = entities.Select(e => e.ToDomain()).ToList();
+
             return customersDomain;
         }
 
-        public async Task<CustomerDomain> AddAsync(CustomerDomain domain)
+        public async Task<CustomerDomain?> GetByIdAsync(Guid id, CancellationToken ct = default)
+        {
+            var entity = await _context.Customers
+                .AsNoTracking()
+                .Include(c => c.Orders)
+                .Include(c => c.Address)
+                .FirstOrDefaultAsync(c => c.Id == id, ct);
+
+            return entity?.ToDomain();
+        }
+
+        public async Task<CustomerDomain> AddAsync(CustomerDomain domain, CancellationToken ct = default)
         {
             var newCustomerEntity = domain.ToEntity();
-            await _context.AddAsync(newCustomerEntity);
-            await _context.SaveChangesAsync();
+            await _context.AddAsync(newCustomerEntity, ct);
+            await _context.SaveChangesAsync(ct);
             return domain;
         }
     }

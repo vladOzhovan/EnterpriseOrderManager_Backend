@@ -6,7 +6,8 @@ namespace EnterpriseOrderManager.Application.Contracts
 {
     public interface ICustomerService
     {
-        Task<IReadOnlyList<CustomerDomain>> GetAllAsync(CustomerQuery query);
-        Task<CustomerDomain> AddAsync(CustomerCreateModel model);
+        Task<IReadOnlyList<CustomerDomain>> GetAllAsync(CustomerQuery query, CancellationToken ct = default);
+        Task<CustomerDomain> GetByIdAsync(Guid id, CancellationToken ct = default);
+        Task<CustomerDomain> AddAsync(CustomerCreateModel model, CancellationToken ct = default);
     }
 }

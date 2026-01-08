@@ -5,7 +5,8 @@ namespace EnterpriseOrderManager.Application.Contracts
 {
     public interface ICustomerRepository
     {
-        Task<IReadOnlyList<CustomerDomain>> GetAllAsync(CustomerQuery query);
-        Task<CustomerDomain> AddAsync(CustomerDomain domain);
+        Task<IReadOnlyList<CustomerDomain>> GetAllAsync(CustomerQuery query, CancellationToken ct = default);
+        Task<CustomerDomain?> GetByIdAsync(Guid id, CancellationToken ct = default);
+        Task<CustomerDomain> AddAsync(CustomerDomain domain, CancellationToken ct = default);
     }
 }

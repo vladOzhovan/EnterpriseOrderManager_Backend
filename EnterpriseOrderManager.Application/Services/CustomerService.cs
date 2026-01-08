@@ -19,15 +19,28 @@ namespace EnterpriseOrderManager.Application.Services
             _numberGenerator = numberGenerator;
         }
 
-        public async Task<IReadOnlyList<CustomerDomain>> GetAllAsync(CustomerQuery query)
+        public async Task<IReadOnlyList<CustomerDomain>> GetAllAsync(CustomerQuery query, CancellationToken ct = default)
         {
-            var customers = await _repository.GetAllAsync(query);
+            var customers = await _repository.GetAllAsync(query, ct);
             return customers;
         }
 
-        public async Task<CustomerDomain> AddAsync(CustomerCreateModel model)
+        public async Task<CustomerDomain> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
-            var number = await _numberGenerator.GetNextAsync();
+            if (id == Guid.Empty)
+                throw new ArgumentException("Customer id is empty.", nameof(id));
+
+            var customer = await _repository.GetByIdAsync(id, ct);
+
+            if (customer is null)
+                throw new KeyNotFoundException($"Customer '{id}' not found.");
+
+            return customer;
+        }
+
+        public async Task<CustomerDomain> AddAsync(CustomerCreateModel model, CancellationToken ct = default)
+        {
+            var number = await _numberGenerator.GetNextAsync(ct);
 
             var creationData = new CustomerCreationData
             (
@@ -39,7 +52,7 @@ namespace EnterpriseOrderManager.Application.Services
             );
 
             var domain = CustomerFactory.Create(creationData);
-            await _repository.AddAsync(domain);
+            await _repository.AddAsync(domain, ct);
             return domain;
         }
     }

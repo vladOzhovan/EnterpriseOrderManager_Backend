@@ -1,4 +1,5 @@
 ﻿using EnterpriseOrderManager.Application.Contracts;
+using EnterpriseOrderManager.Application.Events.Abstractions;
 using EnterpriseOrderManager.Application.Queries;
 using EnterpriseOrderManager.Domain.Entities;
 using EnterpriseOrderManager.Infrastructure.Data;
@@ -11,9 +12,11 @@ namespace EnterpriseOrderManager.Infrastructure.Repositories
     public class CustomerRepository : ICustomerRepository
     {
         private readonly AppDbContext _context;
-        public CustomerRepository(AppDbContext context)
+        private readonly IDomainEventDispatcher _dispatcher;
+        public CustomerRepository(AppDbContext context, IDomainEventDispatcher dispatcher)
         {
             _context = context;
+            _dispatcher = dispatcher;
         }
 
         public async Task<IReadOnlyList<CustomerDomain>> GetAllAsync(CustomerQuery query, CancellationToken ct = default)
@@ -49,6 +52,12 @@ namespace EnterpriseOrderManager.Infrastructure.Repositories
             var newCustomerEntity = domain.ToEntity();
             await _context.AddAsync(newCustomerEntity, ct);
             await _context.SaveChangesAsync(ct);
+
+            // Handle and clear Domain events
+            var events = domain.DomainEvents.ToList();
+            await _dispatcher.DispatchAsync(events, ct);
+            domain.ClearDomainEvents();
+
             return domain;
         }
     }

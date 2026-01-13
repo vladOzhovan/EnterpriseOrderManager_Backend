@@ -23,6 +23,7 @@ namespace EnterpriseOrderManager.Infrastructure.Extensions
         public static IQueryable<CustomerEntity> ApplySorting(this IQueryable<CustomerEntity> query,
                                                               CustomerSortField sortBy, bool isDescending = false)
         {
+            // TODO: add sorting by status
             return sortBy switch
             {
                 CustomerSortField.FirstName => isDescending

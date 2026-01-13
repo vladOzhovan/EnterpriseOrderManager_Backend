@@ -9,7 +9,7 @@ namespace EnterpriseOrderManager.Domain.Factories
             var firstName = string.IsNullOrWhiteSpace(data.firstName) ? "Unknown" : data.firstName.Trim();
             var secondName = string.IsNullOrWhiteSpace(data.secondName) ? "Unknown" : data.secondName.Trim();
 
-            return new CustomerDomain
+            var newCustomer = new CustomerDomain
             {
                 Id = Guid.NewGuid(),
                 CustomerNumber = data.customerNumber,
@@ -19,6 +19,9 @@ namespace EnterpriseOrderManager.Domain.Factories
                 Email = data.email ?? string.Empty,
                 CreatedAt = DateTime.UtcNow
             };
+
+            newCustomer.RaiseCreatedEvent();
+            return newCustomer;
         }
     }
 }

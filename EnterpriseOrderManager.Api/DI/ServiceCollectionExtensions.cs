@@ -1,6 +1,10 @@
 ﻿using EnterpriseOrderManager.Application.Contracts;
+using EnterpriseOrderManager.Application.Events.Abstractions;
+using EnterpriseOrderManager.Application.Events.Handlers;
 using EnterpriseOrderManager.Application.Services;
+using EnterpriseOrderManager.Domain.Events.Customers;
 using EnterpriseOrderManager.Infrastructure.Data;
+using EnterpriseOrderManager.Infrastructure.Events;
 using EnterpriseOrderManager.Infrastructure.Identity;
 using EnterpriseOrderManager.Infrastructure.Repositories;
 using EnterpriseOrderManager.Infrastructure.Services;
@@ -28,6 +32,10 @@ namespace EnterpriseOrderManager.Api.DI
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ICustomerNumberGenerator, SqliteCustomerNumberGenerator>();
+
+            // handlers and dispatcher
+            services.AddTransient<IDomainEventHandler<CustomerCreatedDomainEvent>, CustomerCreatedLoggingHandler>();
+            services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
             // configure Identity
             services.AddIdentityCore<AppUser>(options =>

@@ -8,5 +8,6 @@
         SecondName = 4,
         Phonenumber = 5,
         Email = 6,
+        Status = 7
     }
 }

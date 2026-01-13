@@ -9,12 +9,13 @@ namespace EnterpriseOrderManager.Api.Mappers
         {
             return new CustomerResponseDto
             {
-                CustomerNumber = customer.CustomerNumber,
+                Id = customer.Id,
+                CustomerNumber = customer.CustomerNumber.ToString("D5"),
                 FirstName = customer.FirstName,
                 SecondName = customer.SecondName,
                 Email = customer.Email,
                 PhoneNumber = customer.PhoneNumber,
-                Address = customer.Address,
+                Address = customer.Address.ToResponseDto(),
                 Status = customer.Status,
                 CreatedAt = customer.CreatedAt,
                 Orders = customer.Orders.Select(o => o.ToResponseDto()).ToList()

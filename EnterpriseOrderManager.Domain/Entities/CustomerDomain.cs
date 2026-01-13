@@ -1,9 +1,14 @@
-﻿using EnterpriseOrderManager.Domain.Enums;
+﻿using EnterpriseOrderManager.Domain.Abstractions;
+using EnterpriseOrderManager.Domain.Enums;
+using EnterpriseOrderManager.Domain.Events.Customers;
 
 namespace EnterpriseOrderManager.Domain.Entities
 {
-    public class CustomerDomain
+    public class CustomerDomain : AggregateRoot
     {
+        private readonly List<OrderDomain> _orders = new();
+        public IReadOnlyCollection<OrderDomain> Orders => _orders;
+
         public Guid Id { get; set; }
         public int CustomerNumber { get; set; }
         public string FirstName { get; set; } = string.Empty;
@@ -17,24 +22,55 @@ namespace EnterpriseOrderManager.Domain.Entities
         {
             get
             {
-                if (Orders.Count == 0)
+                if (_orders.Count == 0)
                     return CustomerStatus.NoOrders;
 
-                if (Orders.All(o => o.Status == OrderStatus.Completed))
+                if (_orders.All(o => o.Status == OrderStatus.Completed))
                     return CustomerStatus.Completed;
 
-                if (Orders.All(o => o.Status == OrderStatus.Canceled))
+                if (_orders.All(o => o.Status == OrderStatus.Canceled))
                     return CustomerStatus.Canceled;
 
-                if (Orders.Any(o => o.Status == OrderStatus.InProgress))
+                if (_orders.Any(o => o.Status == OrderStatus.InProgress))
                     return CustomerStatus.InProgress;
 
-                if (Orders.All(o => o.Status == OrderStatus.Pending))
+                if (_orders.All(o => o.Status == OrderStatus.Pending))
                     return CustomerStatus.Pending;
 
                 return CustomerStatus.Pending;
             }
         }
-        public List<OrderDomain> Orders { get; set; } = new List<OrderDomain>();
+        
+        public void AddOrder(OrderDomain order)
+        {
+            if (order is null) throw new ArgumentNullException(nameof(order));
+
+            if (order.CustomerId != Id)
+                throw new InvalidOperationException("Order.CustomerId must match Customer.Id");
+
+            _orders.Add(order);
+        }
+
+        public void LoadOrders(IEnumerable<OrderDomain> orders)
+        {
+            if (orders is null) throw new ArgumentNullException(nameof(orders));
+
+            _orders.Clear();
+
+            foreach (var order in orders)
+                AddOrder(order);
+        }
+
+        public void RemoveOrder(Guid id)
+        {
+            var order = _orders.FirstOrDefault(o => o.Id == id);
+            if (order is null) throw new KeyNotFoundException(nameof(order));
+            _orders.Remove(order);
+        }
+
+        public void RaiseCreatedEvent()
+        {
+            this.AddDomainEvent(new CustomerCreatedDomainEvent(Id, CustomerNumber));
+        }
     }
 }

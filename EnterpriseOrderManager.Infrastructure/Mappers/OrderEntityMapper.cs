@@ -23,7 +23,7 @@ namespace EnterpriseOrderManager.Infrastructure.Mappers
             return new OrderEntity
             {
                 Id = domain.Id,
-                CustomerId = domain.Id,
+                CustomerId = domain.CustomerId,
                 CustomerNumber = domain.CustomerNumber,
                 Title = domain.Title,
                 Description = domain.Description,

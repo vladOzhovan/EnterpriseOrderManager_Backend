@@ -1,5 +1,4 @@
 ﻿using EnterpriseOrderManager.Api.Dtos;
-using EnterpriseOrderManager.Api.Helpers;
 using EnterpriseOrderManager.Application.Queries;
 
 namespace EnterpriseOrderManager.Api.Mappers

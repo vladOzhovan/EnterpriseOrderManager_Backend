@@ -7,7 +7,7 @@ namespace EnterpriseOrderManager.Infrastructure.Mappers
     {
         public static CustomerDomain ToDomain(this CustomerEntity entity)
         {
-            return new CustomerDomain
+            var domain = new CustomerDomain
             {
                 Id = entity.Id,
                 CustomerNumber = entity.CustomerNumber,
@@ -17,8 +17,11 @@ namespace EnterpriseOrderManager.Infrastructure.Mappers
                 PhoneNumber = entity.PhoneNumber,
                 CreatedAt = entity.CreatedAt,
                 Address = entity.Address.ToDomain(),
-                Orders = entity.Orders.Select(o => o.ToDomain()).ToList()
             };
+
+            var ordersDomain = entity.Orders.Select(o => o.ToDomain()).ToList();
+            domain.LoadOrders(ordersDomain);
+            return domain;
         }
 
         public static CustomerEntity ToEntity(this CustomerDomain domain)
